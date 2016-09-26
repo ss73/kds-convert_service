@@ -1,0 +1,19 @@
+{
+  "name": "convert_service",
+  "version": "1.0.0",
+  "description": "Converts PDF documents into plain text",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ss73/kds-convert_service.git"
+  },
+  "author": "Stellan Söderström",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ss73/kds-convert_service/issues"
+  },
+  "homepage": "https://github.com/ss73/kds-convert_service#readme"
+}
