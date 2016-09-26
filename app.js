@@ -9,7 +9,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/convert', function(req, res) {
-    res.sendFile(path.join(__dirname, 'views/upload.html'));    
+    res.sendFile(path.join(__dirname, 'views/convert.html'));    
 });
 
 app.post('/convert', function(req, res) {
