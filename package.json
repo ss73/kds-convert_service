@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ss73/kds-convert_service/issues"
   },
-  "homepage": "https://github.com/ss73/kds-convert_service#readme"
+  "homepage": "https://github.com/ss73/kds-convert_service#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
 }
