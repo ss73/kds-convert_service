@@ -3,8 +3,9 @@ var app = express();
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
-var multer  = require('multer')
-var upload = multer({ dest: '/tmp/convertservice'});
+var multer = require('multer')
+var tempdir = '/tmp/convertservice/';
+var upload = multer({ dest: tempdir });
 
 app.use(function (req, res, next) {
     var content_type = req.headers['content-type'];
@@ -21,6 +22,20 @@ app.get('/', function (req, res) {
 
 app.get('/convert', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/convert.html'));
+});
+
+app.get('/cleanup', function (req, res) {
+    res.send("Cleaning up directory: " + tempdir);
+    fs.readdir(tempdir, function (err, files) {
+        for (i in files) {
+            console.log("Deleting: " + files[i]);
+            fs.unlink(tempdir + files[i], function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+            });
+        }
+    });
 });
 
 app.post('/form/convert', upload.single('pdffile'), function (req, res) {
@@ -44,7 +59,7 @@ app.post('/form/convert', upload.single('pdffile'), function (req, res) {
 });
 
 app.post('/convert', function (req, res) {
-    var filename = '/tmp/convertservice/' + crypto.randomBytes(16).toString('hex');
+    var filename = tempdir + crypto.randomBytes(16).toString('hex');
     var stream = req.pipe(fs.createWriteStream(filename));
     stream.on('finish', function () {
         var cmd = 'pdftotext ' + filename + ' ' + filename + '.txt';
