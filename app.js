@@ -9,9 +9,8 @@ var upload = multer({ dest: '/tmp/convertservice'});
 app.use(function (req, res, next) {
     var content_type = req.headers['content-type'];
     if (content_type != null && content_type.startsWith('multipart/form-data')) {
-        console.log("Its a form!");
         req.url = "/form" + req.url;
-        console.log("New URL: " + req.url);
+        console.log("New 'virtual' URL: " + req.url);
     }
     next();
 });
@@ -25,7 +24,7 @@ app.get('/convert', function (req, res) {
 });
 
 app.post('/form/convert', upload.single('pdffile'), function (req, res) {
-    console.log("Files: " + JSON.stringify(req.file));
+    //console.log("Files: " + JSON.stringify(req.file));
     var infile = req.file.path;
     var outfile = infile + ".txt";
     var cmd = 'pdftotext ' + infile + ' ' + outfile;
