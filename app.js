@@ -3,31 +3,64 @@ var app = express();
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
+var multer  = require('multer')
+var upload = multer({ dest: '/tmp/convertservice'});
+
+app.use(function (req, res, next) {
+    var content_type = req.headers['content-type'];
+    if (content_type != null && content_type.startsWith('multipart/form-data')) {
+        console.log("Its a form!");
+        req.url = "/form" + req.url;
+        console.log("New URL: " + req.url);
+    }
+    next();
+});
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/info.html'));
 });
 
-app.get('/convert', function(req, res) {
-    res.sendFile(path.join(__dirname, 'views/convert.html'));    
+app.get('/convert', function (req, res) {
+    res.sendFile(path.join(__dirname, 'views/convert.html'));
 });
 
-app.post('/convert', function(req, res) {
-    var stream = req.pipe(fs.createWriteStream(path.join(__dirname, 'temp.pdf')));
-    stream.on('finish', function(){
-        var cmd = 'pdftotext temp.pdf temp.txt'; 
-    	exec(cmd, function(error, stdout, stderr) {
-    	    // command output is in stdout
-	        console.log(`stdout: ${stdout}`);
-	        console.log(`stderr: ${stderr}`);
-	        if (error !== null) {
-	            console.log(`exec error: ${error}`);
+app.post('/form/convert', upload.single('pdffile'), function (req, res) {
+    console.log("Files: " + JSON.stringify(req.file));
+    var infile = req.file.path;
+    var outfile = infile + ".txt";
+    var cmd = 'pdftotext ' + infile + ' ' + outfile;
+    console.log("Command: " + cmd);
+    exec(cmd, function (error, stdout, stderr) {
+        // command output is in stdout
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+        if (error !== null) {
+            console.log(`exec error: ${error}`);
+            res.status(500).send(`${error}`);
+        }
+        else {
+            res.sendFile(outfile);
+        }
+    });
+});
+
+app.post('/convert', function (req, res) {
+    var filename = '/tmp/convertservice/' + crypto.randomBytes(16).toString('hex');
+    var stream = req.pipe(fs.createWriteStream(filename));
+    stream.on('finish', function () {
+        var cmd = 'pdftotext ' + filename + ' ' + filename + '.txt';
+        exec(cmd, function (error, stdout, stderr) {
+            // command output is in stdout
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+            if (error !== null) {
+                console.log(`exec error: ${error}`);
                 res.status(500).send(`${error}`);
-	        }
-            else {
-                res.sendFile(path.join(__dirname, "temp.txt"));
             }
-	    });
+            else {
+                res.sendFile(filename + '.txt');
+            }
+        });
     });
 });
 

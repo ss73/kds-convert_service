@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ss73/kds-convert_service#readme",
   "dependencies": {
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "multer": "^1.2.0"
   }
 }
