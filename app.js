@@ -26,10 +26,10 @@ app.get('/convert', function (req, res) {
 });
 
 app.get('/cleanup', function (req, res) {
-    res.send("Cleaning up directory: " + tempdir);
+    res.send("Cleaning up temp directory\n");
     fs.readdir(tempdir, function (err, files) {
         for (i in files) {
-            console.log("Deleting: " + files[i]);
+            // console.log("Deleting: " + files[i]);
             fs.unlink(tempdir + files[i], function (err) {
                 if (err) {
                     return console.log(err);
@@ -66,8 +66,8 @@ app.post('/convert', function (req, res) {
         var cmd = 'pdftotext ' + filename + ' ' + filename + '.txt';
         exec(cmd, function (error, stdout, stderr) {
             // command output is in stdout
-            console.log(`stdout: ${stdout}`);
-            console.log(`stderr: ${stderr}`);
+            // console.log(`stdout: ${stdout}`);
+            // console.log(`stderr: ${stderr}`);
             if (error !== null) {
                 console.log(`exec error: ${error}`);
                 res.status(500).send(`${error}`);
