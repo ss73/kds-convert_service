@@ -4,6 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
 var multer = require('multer')
+var crypto = require ("crypto");
 var tempdir = '/tmp/convertservice/';
 var upload = multer({ dest: tempdir });
 
