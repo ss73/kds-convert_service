@@ -79,6 +79,6 @@ app.post('/convert', function (req, res) {
     });
 });
 
-app.listen(3000, function () {
-    console.log('Convert service listening on port 3000!');
+app.listen(32400, function () {
+    console.log('Convert service listening on port 32400!');
 });
